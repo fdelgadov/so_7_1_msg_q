@@ -14,7 +14,7 @@
 
 typedef struct{
   int numero;
-  char* nombre;
+  char nombre[20];
   float sueldo;
 } DATA;
 
@@ -46,9 +46,8 @@ int main() {
     perror("msgrcv:");
     exit(errno);
   }
-  DATA *dt = &(msg2.info);
-  char* str = dt->nombre;
-  printf("Mensaje recibido de tipo = %ld con numero: %d, nombre: %s sueldo: %f\n", msg2.tipo, dt->numero, str, dt->sueldo);
+  DATA dt = msg2.info;
+  printf("Mensaje recibido de tipo = %ld con numero: %d, nombre = %s, sueldo: %f\n", msg2.tipo, dt.numero, dt.nombre, dt.sueldo);
   
   if (msgctl(qid, IPC_RMID, NULL) == ERROR) {
     perror("msgctl:");

@@ -14,7 +14,7 @@
 
 typedef struct{
   int numero;
-  char* nombre;
+  char nombre[20];
   float sueldo;
 } DATA;
 
@@ -42,8 +42,9 @@ int main() {
   printf("Cola de mensajes creada...\n");
   
   msg.tipo = 1; // pid del destinatario
-  DATA dt = {10, "franco", 10.5};
+  DATA dt = {10, "Franco", 10.5};
   msg.info = dt; // informacion a transmitir
+  printf("dt: %d %s %f\n", dt.numero, dt.nombre, dt.sueldo);
   printf("Enviando mensaje...\n");
   if (msgsnd(qid, &msg, sizeof(MENSAJE) - sizeof(long), 0) == ERROR) {
     perror("msgsnd:");
