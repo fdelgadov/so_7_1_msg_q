@@ -47,7 +47,9 @@ int main() {
     exit(errno);
   }
   DATA dt = msg2.info;
-  printf("Mensaje recibido de tipo = %ld con numero: %d, nombre = %s, sueldo: %f\n", msg2.tipo, dt.numero, dt.nombre, dt.sueldo);
+  printf("Mensaje recibido de tipo = %ld ", msg2.tipo);
+  printf("con numero: %d, nombre = %s, ", dt.numero, dt.nombre);
+  printf("sueldo: %f\n", dt.sueldo);
   
   if (msgctl(qid, IPC_RMID, NULL) == ERROR) {
     perror("msgctl:");
