@@ -23,8 +23,12 @@ typedef struct {
 } mensaje;
 
 void printTable(){
-  for(int i = 0; i < 9; i++){
-    printf("%d ", TABLE[i]);
+  for(int i = 0; i < 3; i++){
+    printf("%c ", TABLE[3 * i]);
+    for(int j = 1; j < 3; j++){
+      printf("| %c", TABLE[3 * i + j]);
+    }
+    printf("\n");
   }
   printf("\n");
 }
@@ -43,16 +47,20 @@ int main(){
   }
 
   mensaje msg;
-  int turns = 2, idx;
-  while(turns < 9){
+  int turns = -1, idx;
+  while(turns < 8){
     msgrcv(qid, &msg, sizeof(mensaje) - sizeof(long), RCV, 0);
+    printf("%d\n", turns);
     turns = msg.info;
     printTable();
     printf("Ingrese posicion (0-9): ");
     scanf("%d", &idx);
     TABLE[idx] = 'O';
-    msg.info = turns++;
+    msg.info = turns + 1;
     msg.type = SND;
     msgsnd(qid, &msg, sizeof(mensaje) - sizeof(long), 0);
   }
+
+  msgrcv(qid, &msg, sizeof(mensaje) - sizeof(long), RCV, 0);
+  printTable();
 }

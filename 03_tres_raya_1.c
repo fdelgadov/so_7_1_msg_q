@@ -23,8 +23,12 @@ typedef struct {
 } mensaje;
 
 void printTable(){
-  for(int i = 0; i < 9; i++){
-    printf("%d ", TABLE[i]);
+  for(int i = 0; i < 3; i++){
+    printf("%c ", TABLE[3 * i]);
+    for(int j = 1; j < 3; j++){
+      printf("| %c", TABLE[3 * i + j]);
+    }
+    printf("\n");
   }
   printf("\n");
 }
@@ -34,7 +38,7 @@ int main(){
   fd = shm_open(NAME, O_CREAT | O_RDWR, 0766);
   ftruncate(fd, SIZE);
   TABLE = mmap(0, SIZE, PROT_WRITE, MAP_SHARED, fd, 0);
-  sprintf(TABLE, "%s", "\0\0\0\0\0\0\0\0");
+  sprintf(TABLE, "%s", "        ");
 
   int qid;
 
@@ -51,19 +55,20 @@ int main(){
 
   mensaje msg;
   msg.type = RCV;
-  msg.info = 0;
+  msg.info = 1;
 
   msgsnd(qid, &msg, sizeof(mensaje) - sizeof(long), 0);
 
-  int turns = 1, idx;
+  int turns = -1, idx;
   while(turns < 9){
     msgrcv(qid, &msg, sizeof(mensaje) - sizeof(long), RCV, 0);
+    printf("%d\n", turns);
     turns = msg.info;
     printTable();
     printf("Ingrese posicion (0-9): ");
     scanf("%d", &idx);
     TABLE[idx] = 'X';
-    msg.info = turns++;
+    msg.info = turns + 1;
     msg.type = SND;
     msgsnd(qid, &msg, sizeof(mensaje) - sizeof(long), 0);
   }
